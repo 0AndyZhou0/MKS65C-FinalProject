@@ -23,7 +23,9 @@ int main() {
     while(read(from_client, receive, sizeof(receive)) > 0){
       receive[strlen(receive)] = '\0';
       printf("recieved info : %s\n", receive);
-    
+
+      strcpy(send, receive);
+      
       //Sends Changed Information
       write(to_client, send, sizeof(send));
     }
