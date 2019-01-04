@@ -9,12 +9,12 @@
   returns the file descriptor for the upstream pipe.
   =========================*/
 int server_handshake(int *to_client) {
-  mkfifo("ur_mum_gay", 0644);//WKP
+  mkfifo("server_name", 0644);//WKP
   
   char private_pipe[100];
-  int pipe = open("ur_mum_gay", O_RDONLY);//Waiting for private pipe
+  int pipe = open("server_name", O_RDONLY);//Waiting for private pipe
   read(pipe, private_pipe, sizeof(char*));
-  remove("ur_mum_gay");
+  remove("server_name");
 
   *to_client = open(private_pipe, O_WRONLY);//Sends to client file descriptor
   write(*to_client, "sending signal", sizeof(char*));
@@ -36,18 +36,23 @@ int server_handshake(int *to_client) {
   returns the file descriptor for the downstream pipe.
   =========================*/
 int client_handshake(int *to_server) {
-  mkfifo("no_u", 0644);//Private Pipe
+  //char pipe_name[100];
+  //printf("Insert name\n");
+  //scanf("%[^\n]s",pipe_name);
+  char * pipe_name = "owowo";
+  
+  mkfifo(pipe_name, 0644);//Private Pipe
 
-  *to_server = open("ur_mum_gay", O_WRONLY);//Sends private pipe name
-  write(*to_server, "no_u", sizeof(char*));
+  *to_server = open("server_name", O_WRONLY);//Sends private pipe name
+  write(*to_server, pipe_name, sizeof(char*));
 
   char from_server[100];
-  int pipe = open("no_u", O_RDONLY);//Recieves from server file descriptor 
+  int pipe = open(pipe_name, O_RDONLY);//Recieves from server file descriptor 
   read(pipe, from_server, sizeof(char*));
 
   write(*to_server, "sending signal", sizeof(char*));
 
-  remove("no_u");
+  remove(pipe_name);
 
   printf("connected to server\n");
 
