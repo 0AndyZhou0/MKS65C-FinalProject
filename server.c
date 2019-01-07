@@ -2,7 +2,6 @@
 
 
 int main() {
-
   int to_client;
   int from_client;
 
@@ -13,23 +12,24 @@ int main() {
   int i = 0;
   
   while(1){
-    from_client = server_handshake( &to_client );
-    if(from_client != clients[i]){
-      clients[i] = from_client;
-      i++;
-    }
+    from_client = server_handshake(&clients[i]);
+    i++;
 
-    //Receiving Information
-    while(read(from_client, receive, sizeof(receive)) > 0){
-      receive[strlen(receive)] = '\0';
-      printf("recieved info : %s\n", receive);
+    if(fork() == 0){
+      //Receiving Information
+      while(read(from_client, receive, sizeof(receive)) > 0){
+	receive[strlen(receive)] = '\0';
+	printf("recieved info : %s\n", receive);
 
-      strcpy(send, receive);
+	strcpy(send, receive);
       
-      //Sends Changed Information
-      write(to_client, send, sizeof(send));
+	//Sends Changed Information
+	for(int x = 0;x < i;x++){
+	  write(clients[x], send, sizeof(send));
+	}
+	//write(to_client, send, sizeof(send));
+      }
     }
-    printf("error %d\n", errno);
   }
   return 0;
 }
