@@ -1,25 +1,24 @@
 #include "networking.h"
 
-void process(char *s);
+//void process(char *s);
 void subserver(int from_client);
 
 int main() {
 
-  // int listen_socket = server_setup();
+  int listen_socket = server_setup();
   int f;
   int i = 0;
-  int listen_socket[100];
-  for (; i<100; i++)
-    listen_socket[i] = server_setup();
+  //int listen_socket[10];
+  //for (; i<100; i++)
+    //listen_socket[i] = server_setup();
   int client_socket;
 
-  while (1) {
-
+  while (i <= 10) {
     client_socket = server_connect(listen_socket);
     i++;
     
-    f = fork();
-    if (f == 0)
+    //f = fork();
+    if (fork() == 0)
       subserver(client_socket);
     else
       close(client_socket);
@@ -32,15 +31,15 @@ void subserver(int client_socket) {
   char buffer[BUFFER_SIZE];
 
   while (read(client_socket, buffer, sizeof(buffer))) {
-
     printf("[subserver %d] received: [%s]\n", getpid(), buffer);
-    process(buffer);
+    //process(buffer);
     write(client_socket, buffer, sizeof(buffer));
   }//end read loop
   close(client_socket);
   exit(0);
 }
 
+/*
 void process(char * s) {
   while (*s) {
     if (*s >= 'a' && *s <= 'z')
@@ -50,3 +49,4 @@ void process(char * s) {
     s++;
   }
 }
+*/
