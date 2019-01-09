@@ -1,4 +1,3 @@
-// Verbatim from Mr. DW
 #include "networking.h"
 
 void error_check( int i, char *s ) {
@@ -11,8 +10,10 @@ void error_check( int i, char *s ) {
 /*=========================
   server_setup
   args:
+
   creates, binds a server side socket
   and sets it to the listening state
+
   returns the socket descriptor
   =========================*/
 int server_setup() {
@@ -51,8 +52,10 @@ int server_setup() {
 /*=========================
   server_connect
   args: int sd
+
   sd should refer to a socket in the listening state
   run the accept call
+
   returns the socket descriptor for the new socket connected
   to the client.
   =========================*/
@@ -71,9 +74,12 @@ int server_connect(int sd) {
 /*=========================
   client_setup
   args: int * to_server
+
   to_server is a string representing the server address
+
   create and connect a socket to a server socket that is
   in the listening state
+
   returns the file descriptor for the socket
   =========================*/
 int client_setup(char * server) {
