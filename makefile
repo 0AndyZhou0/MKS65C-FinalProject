@@ -1,19 +1,33 @@
-all: client server
+forking: client fserver
 
-client: client.o pipe_networking.o
-	gcc -o client client.o pipe_networking.o
+select: sclient sserver
 
-server: server.o pipe_networking.o
-	gcc -o server server.o pipe_networking.o
+sserver: select_server.o networking.o
+	gcc -o server select_server.o networking.o
 
-client.o: client.c pipe_networking.h
+fserver: forking_server.o networking.o
+	gcc -o server forking_server.o networking.o
+
+sclient: select_client.o networking.o
+	gcc -o client select_client.o networking.o
+
+client: client.o networking.o
+	gcc -o client client.o networking.o
+
+select_client.o: select_client.c networking.h
+	gcc -c select_client.c
+
+client.o: client.c networking.h
 	gcc -c client.c
 
-basic_server.o: server.c pipe_networking.h
-	gcc -c server.c
+select_server.o: select_server.c networking.h
+	gcc -c select_server.c
 
-pipe_networking.o: pipe_networking.c pipe_networking.h
-	gcc -c pipe_networking.c
+forking_server.o: forking_server.c networking.h
+	gcc -c forking_server.c
+
+networking.o: networking.c networking.h
+	gcc -c networking.c
 
 clean:
 	rm *.o
