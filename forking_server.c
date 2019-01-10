@@ -23,18 +23,19 @@ int main() {
       i++;
       printf("%d\n",i);
     }
-    
+
     //f = fork();
-    if (fork() == 0){
-      for(int x = 0;x < i;x++){
+    for(int x = 0;x < i;x++){
+      if (fork() == 0){
+      
 	subserver(client_socket[x], client_socket, i);
       }
     }
-    else{
-      for(int x = 0;x < i;x++){
-	close(client_socket[x]);
-      }
-    }
+    //else{
+      //for(int x = 0;x < i;x++){
+	//close(client_socket[x]);
+	//}
+    //}
   }
 
   return 0;
@@ -44,11 +45,11 @@ void subserver(int client_socket, int *client_sockets, int i) {
   char buffer[BUFFER_SIZE];
   
   while (read(client_socket, buffer, sizeof(buffer))) {
-    printf("hello");
     printf("[subserver %d] received: [%s]\n", getpid(), buffer);
     //process(buffer);
     for(int x = 0;x < i;x++){
-      write(client_socket, buffer, sizeof(buffer));
+      printf("x : %d\n",x);
+      write(client_sockets[x], buffer, sizeof(buffer));
     }
   }//end read loop
   close(client_socket);
