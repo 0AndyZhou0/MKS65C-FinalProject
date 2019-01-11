@@ -5,12 +5,20 @@ int main(int argc, char **argv) {
   int server_socket;
   char buffer[BUFFER_SIZE];
 
+  char name[100];
+  printf("Insert name : ");
+  fgets(name, sizeof(name), stdin);
+  *strchr(name, '\n') = 0;
+  strcat(name, " : ");
+
+  char text[100];
+
   if (argc == 2)
     server_socket = client_setup( argv[1]);
   else
     server_socket = client_setup( TEST_IP );
-
-<<<<<<< HEAD
+  
+  //pipes
   int fds[2];
   pipe(fds);
 
@@ -28,23 +36,15 @@ int main(int argc, char **argv) {
       printf(">");
       fgets(buffer, sizeof(buffer), stdin);
       *strchr(buffer, '\n') = 0;
-      write(server_socket, buffer, sizeof(buffer));
+
+      //adds name to text
+      strcpy(text,name);
+      strcat(text,buffer);
+      
+      write(server_socket, text, sizeof(text));
       printf("writing : %s\n", buffer);
       //read(server_socket, buffer, sizeof(buffer));
       //printf("%s\n", buffer);
     }
-=======
-  while (1) {
-    printf(">");
-    fgets(buffer, sizeof(buffer), stdin);
-    *strchr(buffer, '\n') = 0;
-    write(server_socket, buffer, sizeof(buffer));
-
-    if (fork() == 0){
-      read(server_socket, buffer, sizeof(buffer));
-
-    }
-    printf("%s\n", buffer);
->>>>>>> c12d3d2cfdb0cc1241ce47fd74c530d224aa59b9
   }
 }
