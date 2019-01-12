@@ -60,6 +60,10 @@ int main() {
 	  for(int x = 0;client_socket[x];x++){
 	    write(client_socket[x], buffer, sizeof(buffer));
 	  }
+	}else{
+	  //Removes client from list is he/she leaves
+	  close(client_socket[i]);
+	  client_socket[i] = 0;
 	}
       }
     }
