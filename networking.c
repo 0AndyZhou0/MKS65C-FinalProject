@@ -24,6 +24,9 @@ int server_setup() {
   error_check( sd, "server socket" );
   printf("[server] socket created\n");
 
+  int opt = 1;
+  setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt));
+
   //setup structs for getaddrinfo
   struct addrinfo * hints, * results;
   hints = (struct addrinfo *)calloc(1, sizeof(struct addrinfo));
@@ -41,7 +44,7 @@ int server_setup() {
   i = listen(sd, 10);
   error_check( i, "server listen" );
   printf("[server] socket in listen state\n");
-
+  
   //free the structs used by getaddrinfo
   free(hints);
   freeaddrinfo(results);

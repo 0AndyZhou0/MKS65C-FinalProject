@@ -1,4 +1,5 @@
 #include "networking.h"
+#include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros 
 
 //void process(char *s);
 void subserver(int from_client, int *from_clients,int i);
@@ -7,31 +8,61 @@ int main() {
 
   int listen_socket = server_setup();
   int f;
-  int i = 0;
+  //int i = 0;
   //int listen_socket[10];
   //for (; i<10; i++)
   //listen_socket[i] = server_setup();
-  i = 0;
+  //i = 0;
   //int client_socket;
   int client_socket[10];
+  int clients = listen_socket;
+  for(int x = 0;x < 10;x++){
+    client_socket[x] = 0;
+  }
 
+  fd_set readfds;
+  
+  int temp;
+  char buffer[BUFFER_SIZE];
+  
   while (1) {
-    client_socket[i] = server_connect(listen_socket);
-    if(i < 10){
-      i++;
-      printf("%d\n",i);
-    }
-
-    for(int x = 0;x < i;x++){
-      if (fork() == 0){
-	subserver(client_socket[x], client_socket, i);
+    FD_ZERO(&readfds);
+    FD_SET(listen_socket,&readfds);
+    for(int i = 0;i < 10;i++){
+      if(client_socket[i] > 0){
+	FD_SET(client_socket[i], &readfds);
+	if(client_socket[i] > clients){
+	  clients = client_socket[i];
+	}
       }
     }
-    //else{
-      //for(int x = 0;x < i;x++){
-	//close(client_socket[x]);
-      //}
-    //}
+     
+    
+    select(clients + 1, &readfds, NULL, NULL, NULL);
+    
+    if(FD_ISSET(listen_socket, &readfds)){
+      if(temp = server_connect(listen_socket)){
+	for(int x = 0;x < 10 && client_socket[x] != temp;x++){
+	  if(client_socket[x] == 0){
+	    client_socket[x] = temp;//Add to list of clients
+	    printf("x : %d\n",x);
+	    break;
+	  }
+	}
+      }
+    }
+
+    for(int i = 0;client_socket[i];i++){
+      if(FD_ISSET(client_socket[i], &readfds)){
+	//printf("client[%d]\n",i);
+	if(read(client_socket[i], buffer, sizeof(buffer)) > 0){
+	  printf("[subserver %d] received: [%s]\n", getpid(), buffer);
+	  for(int x = 0;client_socket[x];x++){
+	    write(client_socket[x], buffer, sizeof(buffer));
+	  }
+	}
+      }
+    }
   }
 
   return 0;
