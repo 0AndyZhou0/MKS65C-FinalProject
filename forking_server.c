@@ -2,21 +2,15 @@
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros 
 
 //void process(char *s);
-void subserver(int from_client, int *from_clients,int i);
+//void subserver(int from_client, int *from_clients,int i);
 
 int main() {
 
   int listen_socket = server_setup();
   int f;
-  //int i = 0;
-  //int listen_socket[10];
-  //for (; i<10; i++)
-  //listen_socket[i] = server_setup();
-  //i = 0;
-  //int client_socket;
-  int client_socket[10];
+  int client_socket[100];
   int clients = listen_socket;
-  for(int x = 0;x < 10;x++){
+  for(int x = 0;x < 100;x++){
     client_socket[x] = 0;
   }
 
@@ -28,7 +22,7 @@ int main() {
   while (1) {
     FD_ZERO(&readfds);
     FD_SET(listen_socket,&readfds);
-    for(int i = 0;i < 10;i++){
+    for(int i = 0;i < 100;i++){
       if(client_socket[i] > 0){
 	FD_SET(client_socket[i], &readfds);
 	if(client_socket[i] > clients){
@@ -37,12 +31,11 @@ int main() {
       }
     }
      
-    
     select(clients + 1, &readfds, NULL, NULL, NULL);
     
     if(FD_ISSET(listen_socket, &readfds)){
       if(temp = server_connect(listen_socket)){
-	for(int x = 0;x < 10 && client_socket[x] != temp;x++){
+	for(int x = 0;x < 100 && client_socket[x] != temp;x++){
 	  if(client_socket[x] == 0){
 	    client_socket[x] = temp;//Add to list of clients
 	    printf("x : %d\n",x);
@@ -72,6 +65,7 @@ int main() {
   return 0;
 }
 
+/*
 void subserver(int client_socket, int *client_sockets, int i) {
   char buffer[BUFFER_SIZE];
   
@@ -86,6 +80,7 @@ void subserver(int client_socket, int *client_sockets, int i) {
   close(client_socket);
   exit(0);
 }
+*/
 
 /*
 void process(char * s) {

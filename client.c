@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
   *strchr(name, '\n') = 0;
   strcat(name, " : ");
 
-  char text[100];
+  char text[255];
 
   if (argc == 2)
     server_socket = client_setup( argv[1]);
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     close(fds[0]);
     dup2(fds[1], STDOUT_FILENO);
     while (1) {
-      printf(">");
+      //printf(">");
       fgets(buffer, sizeof(buffer), stdin);
       *strchr(buffer, '\n') = 0;
 
@@ -43,8 +43,6 @@ int main(int argc, char **argv) {
       
       write(server_socket, text, sizeof(text));
       printf("writing : %s\n", buffer);
-      //read(server_socket, buffer, sizeof(buffer));
-      //printf("%s\n", buffer);
     }
   }
 }
