@@ -1,5 +1,4 @@
 #include "networking.h"
-#include <curses.h>
 
 
 int main(int argc, char **argv) {
@@ -25,27 +24,6 @@ int main(int argc, char **argv) {
   pipe(fds);
 
 
-
-  WINDOW *topwin;
-  WINDOW *botwin;
-
-  /*  Initialize ncurses  */
-
-  
-  if ( (topwin = initscr()) == NULL ) {
-    fprintf(stderr, "Error initialising ncurses.\n");
-    exit(EXIT_FAILURE);
-  }
-  
-  
-  if ( (botwin = initscr()) == NULL ) {
-    fprintf(stderr, "Error initialising ncurses.\n");
-    exit(EXIT_FAILURE);
-  }
-  
-
-  topwin = newwin(18,40,0,0);
-  refresh();
   
 
   //fds[0] is stdin, fds[1] is stdout
@@ -54,10 +32,10 @@ int main(int argc, char **argv) {
     dup2(fds[0], STDIN_FILENO);
     while(1){
       read(server_socket, buffer, sizeof(buffer));
-      wprintw(topwin, "%s\n", buffer);
+      printf("%s\n", buffer);
       //wprintw(topwin, "are you okay??");
       //wrefresh(topwin);
-      wrefresh(topwin);
+      //wrefresh(topwin);
     }
   }
   //when not reading from socket?
@@ -67,40 +45,28 @@ int main(int argc, char **argv) {
     while (1) {
       // mvaddstr(13, 33, "Hello, world!");
 
-      //printw("LALALLA");
-      botwin = newwin(2,40,20,0);
-      refresh();
-      wmove(botwin,20,0);
-
-      wprintw(botwin, "Your message:");
-      wrefresh(botwin);
-      wgetstr(botwin, buffer);
-      // wscanw(botwin,"%s", buffer);
-      wrefresh(botwin);
+       fgets(buffer, sizeof(buffer), stdin);	
+       *strchr(buffer, '\n') = 0;	      //printw("LALALLA");
    /*  Clean up after ourselves  */
-   
-      //*strchr(buffer, '\n') = 0;
+
+       //*strchr(buffer, '\n') = 0;
 
 
-      //adds name to text
-      strcpy(text,name);
-      strcat(text,buffer);
 
-      wrefresh(botwin);
-      
-      write(server_socket, text, sizeof(text));
-      //wprintw(botwin,"writing : %s\n", buffer);
+       //adds name to text	     
+      strcpy(text,name);	      
+      strcat(text,buffer);	    
 
-      delwin(botwin);
 
+      write(server_socket, text, sizeof(text));	     
+      printf("writing : %s\n", buffer);
+      //printw("LALALLA");
+     
       //refresh();
     }
    
   }
 
-  delwin(topwin);
-  delwin(botwin);
-  endwin();
-  return 0;
+
 
 }
