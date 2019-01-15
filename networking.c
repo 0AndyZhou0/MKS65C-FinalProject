@@ -17,6 +17,8 @@ void error_check( int i, char *s ) {
   returns the socket descriptor
   =========================*/
 int server_setup() {
+
+
   int sd, i;
 
   //create the socket
