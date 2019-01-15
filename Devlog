@@ -10,50 +10,47 @@ Devlog:
 
 2019 - 01 - 04
 --------------------------------------------------------------
+Discussed what we wanted our project to be like and aspects of code. Wrote the guideline
+for code together.
 Andy :: 
 Calvin :: 
 
 2019 - 01 - 05
 --------------------------------------------------------------
+Began with Andy's handshake code and worked from there.
 Andy :: 
 Calvin :: 
 
 2019 - 01 - 07
 --------------------------------------------------------------
+Looked at Mr. DW's code and analyzed it together; we built on from this code
 Andy :: 
 Calvin :: 
 
 2019 - 01 - 09
 --------------------------------------------------------------
-Andy :: 
+Andy :: Fixed big mistake with forking and while loops that screwed with the code. 
 Calvin :: 
 
 2019 - 01 - 10
 --------------------------------------------------------------
-Andy ::
+Worked together on parts of code during class
+Andy :: 
 Calvin :: 
 
 2019 - 01 - 11
 --------------------------------------------------------------
-Andy :: 
-Calvin ::
-
-2019 - 01 - 12
---------------------------------------------------------------
-Andy :: 
+Andy :: Changed sockets to allow for multiple clients on interact (using REUSEADDR)
 Calvin :: 
+
 
 2019 - 01 - 13
 --------------------------------------------------------------
+Revised our ambitious plan. 
 Andy :: 
 Calvin :: 
 
 2019 - 01 - 14
 --------------------------------------------------------------
-Andy :: 
-Calvin :: 
-
-2019 - 01 - 15
---------------------------------------------------------------
-Andy :: 
-Calvin :: 
+Andy :: Tested that networking worked across different computers
+Calvin :: Implemented NCurses to some extent
