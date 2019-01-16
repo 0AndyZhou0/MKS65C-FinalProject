@@ -83,7 +83,7 @@ int main() {
 	      char message[100] = "";
 	      strcat(message, client_names[i]);
 	      strcat(message, "(shout) : ");
-	      strcat(message, buffer);
+	      strcat(message, &buffer[7]);
 	      
 	      for(int x = 0;x < 100;x++){
 		if(client_socket[x]){
