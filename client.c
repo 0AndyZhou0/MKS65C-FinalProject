@@ -45,24 +45,24 @@ int main(int argc, char **argv) {
     while (1) {
       // mvaddstr(13, 33, "Hello, world!");
 
-       fgets(buffer, sizeof(buffer), stdin);	
-       *strchr(buffer, '\n') = 0;	      //printw("LALALLA");
-   /*  Clean up after ourselves  */
+      fgets(buffer, sizeof(buffer), stdin);	
+      *strchr(buffer, '\n') = 0;	      //printw("LALALLA");
+      /*  Clean up after ourselves  */
 
-       //*strchr(buffer, '\n') = 0;
+      //Checks if it is a command
+      if(buffer[0] == '!'){
+	write(server_socket, buffer, sizeof(buffer));	     
+      }else{
+	//adds name to text	     
+	strcpy(text,name);	      
+	strcat(text,buffer);	    
 
-
-
-       //adds name to text	     
-      strcpy(text,name);	      
-      strcat(text,buffer);	    
-
-
-      write(server_socket, text, sizeof(text));	     
-      printf("writing : %s\n", buffer);
-      //printw("LALALLA");
+	write(server_socket, text, sizeof(text));	     
+	printf("writing : %s\n", buffer);
+	//printw("LALALLA");
      
-      //refresh();
+	//refresh();
+      }
     }
    
   }

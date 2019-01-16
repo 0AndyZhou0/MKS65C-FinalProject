@@ -9,9 +9,12 @@ int main() {
   int listen_socket = server_setup();
   int f;
   int client_socket[100];
+  int client_num[100];
+  char* client_names[100];
   int clients = listen_socket;
   for(int x = 0;x < 100;x++){
     client_socket[x] = 0;
+    client_num[x] = 0;
   }
 
   fd_set readfds;
@@ -38,7 +41,7 @@ int main() {
 	for(int x = 0;x < 100 && client_socket[x] != temp;x++){
 	  if(client_socket[x] == 0){
 	    client_socket[x] = temp;//Add to list of clients
-	    printf("x : %d\n",x);
+	    //printf("x : %d\n",x);
 	    break;
 	  }
 	}
@@ -50,11 +53,26 @@ int main() {
 	//printf("client[%d]\n",i);
 	if(read(client_socket[i], buffer, sizeof(buffer)) > 0){
 	  printf("[subserver %d] received: [%s]\n", getpid(), buffer);
-	  for(int x = 0;client_socket[x];x++){
-	    write(client_socket[x], buffer, sizeof(buffer));
+
+	  //Checks for certain commands
+	  if(buffer[0] == '!'){
+	    //Connecting to another server
+	    if(strncmp(buffer, "!connect", 8) == 0){
+	      int num = atoi(&buffer[9]);
+	      if(num != 0){
+		client_num[i] = num;
+	      }
+	    }
+	  }else{
+	    //Writes message to all clients with the correct tag
+	    for(int x = 0;x < 100;x++){
+	      if(client_socket[x] && client_num[i] == client_num[x]){
+		write(client_socket[x], buffer, sizeof(buffer));
+	      }
+	    }
 	  }
 	}else{
-	  //Removes client from list is he/she leaves
+	  //Removes client from list if he/she leaves
 	  close(client_socket[i]);
 	  client_socket[i] = 0;
 	}
