@@ -24,7 +24,7 @@ Instructions on how to use project:
 1. make  
 2. ./server  
 3. ./client  
-   ./client <port>  
+   ./client port  
 
 Commands:  
 !connect <roomnum>  
