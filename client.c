@@ -41,7 +41,6 @@ int main(int argc, char **argv) {
       //wrefresh(topwin);
     }
   }
-  //when not reading from socket?
   else{
     close(fds[0]);
     dup2(fds[1], STDOUT_FILENO);
@@ -49,21 +48,17 @@ int main(int argc, char **argv) {
       // mvaddstr(13, 33, "Hello, world!");
 
       fgets(buffer, sizeof(buffer), stdin);	
-      *strchr(buffer, '\n') = 0;	      //printw("LALALLA");
+      *strchr(buffer, '\n') = 0;
       /*  Clean up after ourselves  */
 
       //Checks if it is a command
       if(buffer[0] == '!'){
 	write(server_socket, buffer, sizeof(buffer));	     
       }else{
-	//adds name to text	     
-	//strcpy(text,name);	      
-	//strcat(text,buffer);	    
-
+	
 	write(server_socket, buffer, sizeof(buffer));	     
 	printf("writing : %s\n", buffer);
-	//printw("LALALLA");
-     
+	
 	//refresh();
       }
     }
