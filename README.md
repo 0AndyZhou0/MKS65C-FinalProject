@@ -18,14 +18,23 @@ Required libraries:
 <netdb.h>
 <string.h>
 <errno.h>
-<curses.h> - to install this library, type the following: $ sudo apt-get install libncurses5-dev libncursesw5-dev
 
 
 Instructions on how to use project:
 1. make
 2. ./server
 3. ./client
+   ./client <port>
+
+Commands:
+!connect <roomnum>
+	 Connects to the specified room
+!shout <message>
+	Shouts to everyone regardless of room
+!setname <name>
+	 Changes your name
 
 To exit,
 1. Ctrl + C on client
+   Please exit on clients first or memory leaks will appear at your doorsteps to haunt you
 2. Ctrl + C on server
