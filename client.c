@@ -10,7 +10,6 @@ int main(int argc, char **argv) {
   printf("Insert name : ");
   fgets(name, sizeof(name), stdin);
   *strchr(name, '\n') = 0;
-  strcat(name, " : ");
 
   char text[255];
 
@@ -23,8 +22,12 @@ int main(int argc, char **argv) {
   int fds[2];
   pipe(fds);
 
-
-  
+  //Tells server their name
+  char name_signal[100] = "!setname ";
+  strcat(name_signal, name);
+  write(server_socket, name_signal, sizeof(name_signal));
+  //Adds colon to end of name because efficiency
+  strcat(name, " : ");
 
   //fds[0] is stdin, fds[1] is stdout
   if(fork() == 0){
@@ -54,10 +57,10 @@ int main(int argc, char **argv) {
 	write(server_socket, buffer, sizeof(buffer));	     
       }else{
 	//adds name to text	     
-	strcpy(text,name);	      
-	strcat(text,buffer);	    
+	//strcpy(text,name);	      
+	//strcat(text,buffer);	    
 
-	write(server_socket, text, sizeof(text));	     
+	write(server_socket, buffer, sizeof(buffer));	     
 	printf("writing : %s\n", buffer);
 	//printw("LALALLA");
      

@@ -15,6 +15,7 @@ int main() {
   for(int x = 0;x < 100;x++){
     client_socket[x] = 0;
     client_num[x] = 0;
+    client_names[x] = 0;
   }
 
   fd_set readfds;
@@ -41,7 +42,7 @@ int main() {
 	for(int x = 0;x < 100 && client_socket[x] != temp;x++){
 	  if(client_socket[x] == 0){
 	    client_socket[x] = temp;//Add to list of clients
-	    //printf("x : %d\n",x);
+	    client_names[x] = malloc(sizeof(char*));
 	    break;
 	  }
 	}
@@ -54,20 +55,54 @@ int main() {
 	if(read(client_socket[i], buffer, sizeof(buffer)) > 0){
 	  printf("[subserver %d] received: [%s]\n", getpid(), buffer);
 
-	  //Checks for certain commands
+	  //Checks for commands
 	  if(buffer[0] == '!'){
-	    //Connecting to another server
-	    if(strncmp(buffer, "!connect", 8) == 0){
+	    
+	    //Connecting to another room
+	    if(strncmp(buffer, "!connect ", 9) == 0){
 	      int num = atoi(&buffer[9]);
 	      if(num != 0){
 		client_num[i] = num;
 	      }
+	      //Telling room someone has joined
+	      for(int x = 0;x < 100;x++){
+		if(client_socket[x] && client_num[x] == client_num[i]){
+		  char message[100] = "";
+		  strcat(message, client_names[i]);
+		  strcat(message, " has joined the server");
+		  write(client_socket[x], message, sizeof(message));
+		}
+	      }
 	    }
+	    //Shouting to every server
+	    else if(strncmp(buffer, "!shout ", 7) == 0){
+	      for(int x = 0;x < 100;x++){
+		if(client_socket[x]){
+		  char message[100] = "";
+		  strcat(message, client_names[i]);
+		  strcat(message, "(shout) : ");
+		  strcat(message, buffer);
+		  write(client_socket[x], message, sizeof(message));
+		}
+	      }
+	    }
+	    //Setting a name
+	    else if(strncmp(buffer, "!setname ", 9) == 0){
+	      printf("%s\n", &buffer[9]);
+	      printf("%s\n",&buffer[9]);
+	      strcpy(client_names[i], &buffer[9]);
+	      printf("%s\n",client_names[i]);
+	    }
+	    
 	  }else{
 	    //Writes message to all clients with the correct tag
 	    for(int x = 0;x < 100;x++){
 	      if(client_socket[x] && client_num[i] == client_num[x]){
-		write(client_socket[x], buffer, sizeof(buffer));
+		char message[100] = "";
+		strcat(message, client_names[i]);
+		strcat(message, " : ");
+		strcat(message, buffer);
+	        write(client_socket[x], message, sizeof(message));
 	      }
 	    }
 	  }
@@ -75,6 +110,8 @@ int main() {
 	  //Removes client from list if he/she leaves
 	  close(client_socket[i]);
 	  client_socket[i] = 0;
+	  client_num[i] = 0;
+	  free(client_names[i]);
 	}
       }
     }
